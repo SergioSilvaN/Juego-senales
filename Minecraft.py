@@ -9,6 +9,8 @@ score = 0
 time_past = int(datetime.datetime.now().second)
 level = 1
 
+p = 0
+
 
 def nivel():
     global text_level, level
@@ -25,7 +27,7 @@ def update():
 
 
 class Voxel(Button):
-    def __init__(self, position=(0, 0, 0), texture='chano.jpeg'):
+    def __init__(self, position=(0, 0, 0), texture='descarga.jpeg'):
         super().__init__(
             parent=scene,
             position=position,
@@ -34,6 +36,15 @@ class Voxel(Button):
             texture=texture,
             color=color.color(0, 0, random.uniform(0.9, 1)))
 
+class Cielo(Entity):
+    def __init__(self):
+        super().__init__(
+            parent=scene,
+            model= 'sphere',
+            texture='cielo.jpeg',
+            scale=150,
+            double_sided=True
+        )
 
 class Voxel_target(Button):
     def __init__(self, position=(0, 0, 0), texture='chano.jpeg'):
@@ -46,9 +57,9 @@ class Voxel_target(Button):
             color=color.color(0, 0, random.uniform(0.9, 1)))
 
     def input(self, key):
-        global score, time_past
+        global score, time_past, p
         if self.hovered:
-            if key == 'left mouse down':
+            if key == 'r':
                 destroy(self)
                 score += 1
                 text_score.text = 'Score: '+str(score)
@@ -58,27 +69,28 @@ class Voxel_target(Button):
                 text_score.text = 'Score: '+str(score)
                 time_past = datetime.datetime.now().second
                 for z in range(10):
-                    Voxel_target(position=(random.randint(0, 20),
-                                 random.randint(1, 20), random.randint(0, 20)))
+                    Voxel_target(position=(random.randint(-10, 10),
+                                 random.randint(1, 10), random.randint(0, 20)))
                 nivel()
 
 
 for z in range(20):
-    for x in range(20):
+    for x in range(-10,10):
         voxel = Voxel(position=(x, 0, z))
 
 for z in range(10):
     target = Voxel_target(position=(random.randint(
-        0, 20), random.randint(1, 20), random.randint(0, 20)))
+        -10, 10), random.randint(1, 10), random.randint(0, 20)))
 
-text_score = Text('Score: '+str(score), y=.48, x=-.8)
+text_score = Text('Score: '+str(score), y=.48, x=-.8, color=color.black)
 text_score.scale = (2, 2)
 
-text_time = Text('Time: '+str(time_past), y=.48, x=-.5)
+text_time = Text('Time: '+str(time_past), y=.48, x=-.5, color=color.black)
 text_time.scale = (2, 2)
 
-text_level = Text(text='Level '+str(level), x=0, y=.48)
+text_level = Text(text='Level '+str(level), x=0, y=.48, color=color.black)
 text_level.scale = (2, 2)
 
+sky=Cielo()
 player = FirstPersonController(speed=10)
 app.run()
